@@ -23,5 +23,4 @@ public class TestWebSocket {
     final RemoteEndpoint.Async re = session.getAsyncRemote();
     re.sendText("aye we got em");
   }
-
 }
