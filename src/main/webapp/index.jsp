@@ -1,5 +1,5 @@
 <html>
   <body>
-    <%= String.valueOf(session.getAttribute("identity")) %>
+    <%= session.getAttribute("identity").toString() %>
   </body>
 </html>

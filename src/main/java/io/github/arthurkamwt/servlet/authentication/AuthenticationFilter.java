@@ -1,4 +1,4 @@
-package io.github.arthurkamwt.servlet;
+package io.github.arthurkamwt.servlet.authentication;
 
 import java.io.IOException;
 import javax.inject.Singleton;
@@ -16,7 +16,7 @@ public class AuthenticationFilter extends HttpFilter {
   @Override
   protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
       throws IOException, ServletException {
-    final String identity = (String) req.getSession().getAttribute("identity");
+    final Object identity = req.getSession().getAttribute("identity");
     if (identity == null && !req.getRequestURI().contains("/authentication/")) {
       res.sendRedirect("/authentication/google");
     } else {

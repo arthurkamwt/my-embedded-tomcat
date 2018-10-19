@@ -1,7 +1,5 @@
 package io.github.arthurkamwt.module;
 
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.inject.AbstractModule;
@@ -27,11 +25,6 @@ public class ConfigsModule extends AbstractModule {
             new InputStreamReader(
                 getClass().getClassLoader().getResourceAsStream(credentialsFile)));
     this.credentialJson = new Gson().fromJson(reader, JsonObject.class);
-  }
-
-  @Override
-  protected void configure() {
-    bind(HttpTransport.class).to(NetHttpTransport.class).asEagerSingleton();
   }
 
   @Named("google-client-id")

@@ -5,6 +5,8 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpTransport;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,7 +26,7 @@ public class GoogleUserRepository {
     this.httpTransport = httpTransport;
   }
 
-  public String getUserInfo(final Credential credential) throws IOException {
+  public JsonObject getUserInfo(final Credential credential) throws IOException {
     final HttpRequestFactory requestFactory = httpTransport.createRequestFactory(credential);
     final GenericUrl url = new GenericUrl(USERINFO_ENDPOINT);
 
@@ -32,6 +34,6 @@ public class GoogleUserRepository {
     request.getHeaders().setContentType("application/json");
     final String jsonIdentity = request.execute().parseAsString();
 
-    return jsonIdentity;
+    return new JsonParser().parse(jsonIdentity).getAsJsonObject();
   }
 }
