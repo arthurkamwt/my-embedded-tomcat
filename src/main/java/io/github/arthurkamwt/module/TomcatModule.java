@@ -13,9 +13,6 @@ import org.apache.tomcat.util.descriptor.web.FilterMap;
 @Slf4j
 public class TomcatModule extends AbstractModule {
 
-  @Override
-  protected void configure() {}
-
   @Provides
   Tomcat getTomcat() throws Exception {
     final Tomcat tomcat = new Tomcat();
