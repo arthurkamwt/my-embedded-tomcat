@@ -15,19 +15,17 @@ application {
 }
 
 dependencies {
-    val tomcatVer = "8.5.50"
     val jerseyVer = "2.30"
 
     implementation(kotlin("stdlib"))
 
-    // embeded tomcat
-    implementation("org.apache.tomcat.embed:tomcat-embed-core:$tomcatVer")
-    implementation("org.apache.tomcat.embed:tomcat-embed-jasper:$tomcatVer")
-    // implementation("org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVer}")
+    // jersey bom
+    implementation(platform("org.glassfish.jersey:jersey-bom:$jerseyVer"))
+    // jersey backfill
+    implementation("org.glassfish.jersey.inject:jersey-hk2")
+    // grizzly container
+    implementation("org.glassfish.jersey.containers:jersey-container-grizzly2-http")
 
-    // jersey servlet
-    implementation("org.glassfish.jersey.containers:jersey-container-servlet:$jerseyVer")
-    implementation("org.glassfish.jersey.inject:jersey-hk2:$jerseyVer")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
 }
 
@@ -38,8 +36,5 @@ ktlint {
     reporters {
         reporter(ReporterType.PLAIN)
         reporter(ReporterType.CHECKSTYLE)
-    }
-    filter {
-        exclude("**/style-violations.kt")
     }
 }

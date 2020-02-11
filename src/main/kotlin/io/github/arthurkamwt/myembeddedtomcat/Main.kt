@@ -1,24 +1,22 @@
 package io.github.arthurkamwt.myembeddedtomcat
 
-import java.io.File
-import org.apache.catalina.startup.Tomcat
+import java.net.URI
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
 import org.glassfish.jersey.server.ResourceConfig
-import org.glassfish.jersey.servlet.ServletContainer
 
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
-        val tomcat = Tomcat().apply {
-            setPort(8080)
-        }
 
-        val context = tomcat.addWebapp("/", File(".").getAbsolutePath())
-        Tomcat.addServlet(context, "jersey-container-servlet",
-            ServletContainer(ResourceConfig().packages("io.github.arthurkamwt.myembeddedtomcat")))
-        context.addServletMappingDecoded("/*", "jersey-container-servlet")
+        val uri = URI.create("http://localhost:8080")
+        val resourceConfig = ResourceConfig().packages("io.github.arthurkamwt.myembeddedtomcat")
+        val server = GrizzlyHttpServerFactory.createHttpServer(uri, resourceConfig, false)
 
-        tomcat.start()
+        // other setups if required
+        server.start()
 
-        tomcat.getServer().await()
+        Runtime.getRuntime().addShutdownHook(Thread {
+            server.stop()
+        })
     }
 }
