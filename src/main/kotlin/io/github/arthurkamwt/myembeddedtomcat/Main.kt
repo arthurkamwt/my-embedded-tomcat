@@ -1,7 +1,6 @@
 package io.github.arthurkamwt.myembeddedtomcat
 
 import java.io.File
-import org.apache.catalina.Context
 import org.apache.catalina.startup.Tomcat
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.servlet.ServletContainer
