@@ -16,7 +16,7 @@ object Main {
         server.start()
 
         Runtime.getRuntime().addShutdownHook(Thread {
-            server.stop()
+            server.shutdown()
         })
     }
 }

@@ -8,6 +8,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    google()
 }
 
 application {
@@ -16,17 +17,23 @@ application {
 
 dependencies {
     val jerseyVer = "2.30"
+    val gapiVer = "1.30.+"
 
     implementation(kotlin("stdlib"))
 
     // jersey bom
     implementation(platform("org.glassfish.jersey:jersey-bom:$jerseyVer"))
-    // jersey backfill
-    implementation("org.glassfish.jersey.inject:jersey-hk2")
     // grizzly container
     implementation("org.glassfish.jersey.containers:jersey-container-grizzly2-http")
-
+    // hk2 is jersey's own DI framework. Eww!
+    implementation("org.glassfish.jersey.inject:jersey-hk2")
+    // suppress complains
     implementation("javax.xml.bind:jaxb-api:2.3.1")
+
+    // google api
+    implementation(platform("com.google.api-client:google-api-client-bom:$gapiVer"))
+    implementation("com.google.api-client:google-api-client")
+    implementation("com.google.api-client:google-api-client-gson")
 }
 
 ktlint {
