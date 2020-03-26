@@ -1,9 +1,8 @@
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
-
 plugins {
     application
     kotlin("jvm") version "1.3.61"
     id("org.jlleitschuh.gradle.ktlint") version "9.1.1"
+    id("com.google.cloud.tools.jib") version "2.0.0"
 }
 
 repositories {
@@ -11,13 +10,9 @@ repositories {
     google()
 }
 
-application {
-    mainClassName = "io.github.arthurkamwt.myembeddedtomcat.Main"
-}
-
 dependencies {
     val jerseyVer = "2.30"
-    val gapiVer = "1.30.+"
+    val googleVer = "1.30.+"
 
     implementation(kotlin("stdlib"))
 
@@ -25,15 +20,29 @@ dependencies {
     implementation(platform("org.glassfish.jersey:jersey-bom:$jerseyVer"))
     // grizzly container
     implementation("org.glassfish.jersey.containers:jersey-container-grizzly2-http")
-    // hk2 is jersey's own DI framework. Eww!
+    // hk2 is jersey's own DI framework. :(
     implementation("org.glassfish.jersey.inject:jersey-hk2")
     // suppress complains
     implementation("javax.xml.bind:jaxb-api:2.3.1")
 
     // google api
-    implementation(platform("com.google.api-client:google-api-client-bom:$gapiVer"))
+    implementation(platform("com.google.api-client:google-api-client-bom:$googleVer"))
     implementation("com.google.api-client:google-api-client")
     implementation("com.google.api-client:google-api-client-gson")
+}
+
+val main_class by extra("io.github.arthurkamwt.myembeddedtomcat.Main")
+
+application {
+    mainClassName = main_class
+}
+
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+kotlin {
+    sourceSets["main"].apply {
+        kotlin.srcDir("src")
+    }
 }
 
 ktlint {
@@ -41,7 +50,26 @@ ktlint {
     outputToConsole.set(true)
     coloredOutput.set(true)
     reporters {
-        reporter(ReporterType.PLAIN)
-        reporter(ReporterType.CHECKSTYLE)
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
+    }
+}
+
+jib {
+    container {
+        ports = listOf("8080")
+        mainClass = main_class
+
+        // good defauls intended for Java 8 (>= 8u191) containers
+        jvmFlags = listOf(
+                "-server",
+                "-Djava.awt.headless=true",
+                "-XX:InitialRAMFraction=2",
+                "-XX:MinRAMFraction=2",
+                "-XX:MaxRAMFraction=2",
+                "-XX:+UseG1GC",
+                "-XX:MaxGCPauseMillis=100",
+                "-XX:+UseStringDeduplication"
+        )
     }
 }

@@ -8,7 +8,7 @@ object Main {
     @JvmStatic
     fun main(args: Array<String>) {
 
-        val uri = URI.create("http://localhost:8080")
+        val uri = URI.create("http://0.0.0.0:8080")
         val resourceConfig = ResourceConfig().packages("io.github.arthurkamwt.myembeddedtomcat")
         val server = GrizzlyHttpServerFactory.createHttpServer(uri, resourceConfig, false)
 
