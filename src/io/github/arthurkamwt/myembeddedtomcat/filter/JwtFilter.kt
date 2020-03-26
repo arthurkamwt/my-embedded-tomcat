@@ -5,6 +5,8 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import io.github.arthurkamwt.myembeddedtomcat.annotation.RequiresAuthentication
 import javax.annotation.Priority
+import javax.inject.Inject
+import javax.inject.Named
 import javax.ws.rs.Priorities
 import javax.ws.rs.container.ContainerRequestContext
 import javax.ws.rs.container.ContainerRequestFilter
@@ -14,17 +16,15 @@ import javax.ws.rs.ext.Provider
 @Provider
 @Priority(Priorities.AUTHORIZATION)
 @RequiresAuthentication
-class JwtFilter : ContainerRequestFilter {
+class JwtFilter @Inject constructor(@Named("GOOGLE_CLIENT_ID") val GOOGLE_CLIENT_ID: String) : ContainerRequestFilter {
 
     companion object {
         val HEADER = "Authorization"
         val SCHEME = "Bearer "
-        val AUDIENCE = "1058013747467-gtq3bdfqeb4vlfqke3hue4bljop0r1ks.apps.googleusercontent.com"
     }
 
-    // DI me
     val verifier = GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory())
-        .setAudience(listOf(AUDIENCE))
+        .setAudience(listOf(GOOGLE_CLIENT_ID))
         .build()
 
     override fun filter(ctx: ContainerRequestContext) {

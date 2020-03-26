@@ -32,6 +32,7 @@ dependencies {
 }
 
 val main_class by extra("io.github.arthurkamwt.myembeddedtomcat.Main")
+val port by extra("8080")
 
 application {
     mainClassName = main_class
@@ -57,10 +58,11 @@ ktlint {
 
 jib {
     container {
-        ports = listOf("8080")
         mainClass = main_class
+        args = listOf(port)
+        ports = listOf(port)
 
-        // good defauls intended for Java 8 (>= 8u191) containers
+        // good defaults intended for Java 8 (>= 8u191) containers
         jvmFlags = listOf(
                 "-server",
                 "-Djava.awt.headless=true",
